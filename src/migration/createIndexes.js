@@ -1,0 +1,153 @@
+require("../config/bootstrap");
+
+const connectDatabase = require("../config/database");
+
+const Product = require("../models/Product");
+const Category = require("../models/Category");
+const Brand = require("../models/Brand");
+
+/**
+ * Safely create an index.
+ * If the index already exists (even with a different name),
+ * it skips instead of throwing an error.
+ */
+async function safeCreateIndex(collection, keys, options = {}) {
+  try {
+    await collection.createIndex(keys, options);
+    console.log(`✅ Created: ${options.name || JSON.stringify(keys)}`);
+  } catch (err) {
+    if (err.code === 85 || err.code === 86) {
+      console.log(`⏭️ Already exists: ${options.name || JSON.stringify(keys)}`);
+    } else {
+      throw err;
+    }
+  }
+}
+
+async function createIndexes() {
+  await connectDatabase();
+
+  console.log("🚀 Creating MongoDB Indexes...\n");
+
+  // ===========================
+  // PRODUCTS
+  // ===========================
+
+  await safeCreateIndex(
+    Product.collection,
+    { slug: 1 },
+    { unique: true, name: "product_slug_unique" }
+  );
+
+  await safeCreateIndex(
+    Product.collection,
+    { sku: 1 },
+    { sparse: true, name: "product_sku" }
+  );
+
+  await safeCreateIndex(
+    Product.collection,
+    { brand: 1 },
+    { name: "product_brand" }
+  );
+
+  await safeCreateIndex(
+    Product.collection,
+    { department: 1, parentCategory: 1, childCategory: 1 },
+    { name: "product_category_tree" }
+  );
+
+  await safeCreateIndex(
+    Product.collection,
+    { sellingPrice: 1 },
+    { name: "product_price" }
+  );
+
+  await safeCreateIndex(
+    Product.collection,
+    { isFeatured: 1, isBestSeller: 1, isNewArrival: 1 },
+    { name: "product_flags" }
+  );
+
+  await safeCreateIndex(
+    Product.collection,
+    { stockStatus: 1, visibility: 1 },
+    { name: "product_stock_visibility" }
+  );
+
+  // Full Text Search Index
+  await safeCreateIndex(
+    Product.collection,
+    {
+      name: "text",
+      brand: "text",
+      sku: "text",
+      searchKeywords: "text",
+      descriptionText: "text",
+    },
+    {
+      name: "product_text_search",
+      weights: {
+        name: 10,
+        sku: 9,
+        brand: 8,
+        searchKeywords: 7,
+        descriptionText: 2,
+      },
+    }
+  );
+
+  console.log("✅ Product indexes completed.\n");
+
+  // ===========================
+  // CATEGORIES
+  // ===========================
+
+  await safeCreateIndex(
+    Category.collection,
+    { slug: 1 },
+    { unique: true, name: "category_slug_unique" }
+  );
+
+  await safeCreateIndex(
+    Category.collection,
+    { level: 1, parentSlug: 1 },
+    { name: "category_hierarchy" }
+  );
+
+  await safeCreateIndex(
+    Category.collection,
+    { rootSlug: 1 },
+    { name: "category_root" }
+  );
+
+  console.log("✅ Category indexes completed.\n");
+
+  // ===========================
+  // BRANDS
+  // ===========================
+
+  await safeCreateIndex(
+    Brand.collection,
+    { slug: 1 },
+    { unique: true, name: "brand_slug_unique" }
+  );
+
+  await safeCreateIndex(
+    Brand.collection,
+    { name: 1 },
+    { name: "brand_name" }
+  );
+
+  console.log("✅ Brand indexes completed.\n");
+
+  console.log("🎉 ALL INDEXES CREATED / VERIFIED SUCCESSFULLY.");
+
+  process.exit(0);
+}
+
+createIndexes().catch((err) => {
+  console.error("❌ Index Migration Failed");
+  console.error(err);
+  process.exit(1);
+});
