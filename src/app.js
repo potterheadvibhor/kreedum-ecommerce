@@ -10,6 +10,8 @@ const morgan = require("morgan");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const brandRoutes = require("./routes/brandRoutes");
+const searchRoutes = require("./routes/searchRoutes");
+const homepageRoutes = require("./routes/homepageRoutes");
 
 const app = express();
 
@@ -77,6 +79,8 @@ app.use(
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/brands", brandRoutes);
+app.use("/api/v1/search", searchRoutes);
+app.use("/api/v1/homepage", homepageRoutes);
 
 // ===============================
 // 404 Handler
