@@ -12,6 +12,9 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const brandRoutes = require("./routes/brandRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const homepageRoutes = require("./routes/homepageRoutes");
+const authRoutes = require("./routes/authRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
+
 
 const app = express();
 
@@ -81,6 +84,8 @@ app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/brands", brandRoutes);
 app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/homepage", homepageRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/wishlist", wishlistRoutes);
 
 // ===============================
 // 404 Handler

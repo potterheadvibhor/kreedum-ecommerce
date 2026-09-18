@@ -6,9 +6,9 @@ const options = {
 
     info: {
       title: "Kreedum Sports Ecommerce API",
-      version: "1.0.0",
+      version: "8.3.0",
       description:
-        "Official REST API for Kreedum Sports Ecommerce Platform.",
+        "Official REST API for Kreedum Sports Ecommerce Platform. Covers product catalog, homepage, search, authentication, wishlist, cart and future order management APIs.",
     },
 
     servers: [
@@ -18,11 +18,65 @@ const options = {
       },
     ],
 
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description:
+            "Enter JWT token as: Bearer <your_token>",
+        },
+      },
+    },
+
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+
     tags: [
-      { name: "Products" },
-      { name: "Categories" },
-      { name: "Brands" },
-      { name: "Enquiries" },
+      {
+        name: "Products",
+        description: "Product catalog and product detail APIs",
+      },
+      {
+        name: "Categories",
+        description: "Category hierarchy APIs",
+      },
+      {
+        name: "Brands",
+        description: "Brand listing APIs",
+      },
+      {
+        name: "Search",
+        description: "Search, suggestions and popular search APIs",
+      },
+      {
+        name: "Homepage",
+        description: "Homepage aggregation APIs",
+      },
+      {
+        name: "Authentication",
+        description: "Customer authentication APIs",
+      },
+      {
+        name: "Wishlist",
+        description: "Customer wishlist APIs",
+      },
+      {
+        name: "Cart",
+        description: "Shopping cart APIs",
+      },
+      {
+        name: "Orders",
+        description: "Order management APIs",
+      },
+      {
+        name: "Enquiries",
+        description: "Product enquiry APIs",
+      },
     ],
   },
 

@@ -5,6 +5,8 @@ const connectDatabase = require("../config/database");
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const Brand = require("../models/Brand");
+const User = require("../models/User");
+const Wishlist = require("../models/Wishlist");
 
 /**
  * Safely create an index.
@@ -138,6 +140,40 @@ async function createIndexes() {
     { name: 1 },
     { name: "brand_name" }
   );
+
+  await safeCreateIndex(
+  User.collection,
+  { email: 1 },
+  {
+    unique: true,
+    name: "user_email_unique",
+  }
+);
+
+// ===========================
+// WISHLIST
+// ===========================
+
+await safeCreateIndex(
+  Wishlist.collection,
+  { user: 1, product: 1 },
+  {
+    unique: true,
+    name: "wishlist_user_product_unique",
+  }
+);
+
+await safeCreateIndex(
+  Wishlist.collection,
+  { user: 1 },
+  {
+    name: "wishlist_user",
+  }
+);
+
+console.log("✅ Wishlist indexes created.");
+
+console.log("✅ User indexes created.");
 
   console.log("✅ Brand indexes completed.\n");
 
