@@ -7,6 +7,7 @@ const Category = require("../models/Category");
 const Brand = require("../models/Brand");
 const User = require("../models/User");
 const Wishlist = require("../models/Wishlist");
+const Cart = require("../models/Cart");
 
 /**
  * Safely create an index.
@@ -170,6 +171,29 @@ await safeCreateIndex(
     name: "wishlist_user",
   }
 );
+
+// ===========================
+// CART
+// ===========================
+
+await safeCreateIndex(
+  Cart.collection,
+  { user: 1, product: 1 },
+  {
+    unique: true,
+    name: "cart_user_product_unique",
+  }
+);
+
+await safeCreateIndex(
+  Cart.collection,
+  { user: 1 },
+  {
+    name: "cart_user",
+  }
+);
+
+console.log("✅ Cart indexes created.");
 
 console.log("✅ Wishlist indexes created.");
 
