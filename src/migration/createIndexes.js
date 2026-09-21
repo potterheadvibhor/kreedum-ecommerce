@@ -8,6 +8,7 @@ const Brand = require("../models/Brand");
 const User = require("../models/User");
 const Wishlist = require("../models/Wishlist");
 const Cart = require("../models/Cart");
+const Order = require("../models/Order");
 
 /**
  * Safely create an index.
@@ -194,6 +195,45 @@ await safeCreateIndex(
 );
 
 console.log("✅ Cart indexes created.");
+
+// ===========================
+// ORDERS
+// ===========================
+
+await safeCreateIndex(
+  Order.collection,
+  { orderNumber: 1 },
+  {
+    unique: true,
+    name: "order_number_unique",
+  }
+);
+
+await safeCreateIndex(
+  Order.collection,
+  { user: 1, createdAt: -1 },
+  {
+    name: "order_user_createdAt",
+  }
+);
+
+await safeCreateIndex(
+  Order.collection,
+  { orderStatus: 1 },
+  {
+    name: "order_status",
+  }
+);
+
+await safeCreateIndex(
+  Order.collection,
+  { paymentStatus: 1 },
+  {
+    name: "payment_status",
+  }
+);
+
+console.log("✅ Order indexes created.");
 
 console.log("✅ Wishlist indexes created.");
 

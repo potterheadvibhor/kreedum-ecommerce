@@ -74,9 +74,13 @@ const options = {
         description: "Order management APIs",
       },
       {
-        name: "Enquiries",
-        description: "Product enquiry APIs",
+        name: "Address",
+        description: "Address management APIs",
       },
+      // {
+      //   name: "Enquiries",
+      //   description: "Product enquiry APIs",
+      // },
     ],
   },
 
