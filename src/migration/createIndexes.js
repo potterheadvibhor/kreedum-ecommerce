@@ -9,6 +9,7 @@ const User = require("../models/User");
 const Wishlist = require("../models/Wishlist");
 const Cart = require("../models/Cart");
 const Order = require("../models/Order");
+const Address = require("../models/Address");
 
 /**
  * Safely create an index.
@@ -233,7 +234,45 @@ await safeCreateIndex(
   }
 );
 
+
+
+// ===========================
+// ADDRESSES
+// ===========================
+
+await safeCreateIndex(
+  Address.collection,
+  { user: 1 },
+  {
+    name: "address_user",
+  }
+);
+
+await safeCreateIndex(
+  Address.collection,
+  { user: 1, isDefault: 1 },
+  {
+    name: "address_default",
+  }
+);
+
+await safeCreateIndex(
+  Address.collection,
+  {
+    user: 1,
+    addressLine1: 1,
+    pincode: 1,
+  },
+  {
+    unique: true,
+    name: "address_user_unique",
+  }
+);
+
+console.log("✅ Address indexes created.");
+
 console.log("✅ Order indexes created.");
+
 
 console.log("✅ Wishlist indexes created.");
 
